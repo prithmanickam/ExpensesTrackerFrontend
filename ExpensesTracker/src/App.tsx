@@ -1,35 +1,72 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import { Box, Button, Container, Paper, Typography } from "@mui/material";
+import LoginPage from "./pages/LoginPage";
+
+const serviceList = ["Service 1", "Service 2", "Service 3"];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
+    
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<LoginPage/>} />
+    </Routes>
+      <Container sx={{ bgcolor: "tomato", height: "100vh" }}>
+        Hello wrld
+        <Typography
+          variant="h1"
+          sx={{ my: 4, textAlign: "center", color: "primary.main" }}
+        >
+          YOOOO
+        </Typography>
+        <Typography variant="h2">Overview</Typography>
+        
+          {serviceList.map((service) => (
+            <Paper elevation={3}>
+              <Typography variant="h3">{service}</Typography>
+              <Typography>yo yo yo wadduppp</Typography>
+            </Paper>
+          ))}
+        
+        <Typography variant="h2">Overview2</Typography>
+        <Box 
+          sx={{ 
+            pt:4,
+            display: "flex", 
+            flexDirection: "row",
+            justifyContent:"space-between",
+            gap:4,
+      
+          }}>
+          
+
+          {serviceList.map((service) => (
+            <Paper elevation={3}>
+              <Box sx={{m:3}}>
+              <Typography variant="h3">{service}</Typography>
+              
+              <Typography sx={{mt:2}}>yo yo yo wadduppp</Typography>
+              <Button variant="contained" > 
+                {/* outlined, contained */}
+                Learn more
+              </Button>
+              <Button variant="contained" color="secondary" sx={{mt:2}}> 
+               
+                Learn more2
+              </Button>
+              
+              </Box>
+            </Paper>
+          ))}
+        </Box>
+      </Container>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
