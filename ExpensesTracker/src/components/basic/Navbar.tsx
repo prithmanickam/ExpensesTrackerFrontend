@@ -107,8 +107,17 @@ const Navbar: FC<Props> = ({ window }) => {
               </Button>
             ))}
           </Box>
-
-          <Button key={"login"} sx={{ color: "#fff", mx: 2 }}>
+          <Button
+            key={"login"}
+            sx={{
+              color: "#fff",
+              mx: 2,
+              display: {
+                xs: "none",
+                sm: "block",
+              },
+            }}
+          >
             <Link
               to={"/login"}
               style={{ textDecoration: "none", color: "white" }}
@@ -148,10 +157,6 @@ const Navbar: FC<Props> = ({ window }) => {
         >
           {drawer}
         </Drawer>
-      </Box>
-      <Box component="main" sx={{ p: 3 }}>
-        <Toolbar />
-        <Typography>Page Content</Typography>
       </Box>
     </Box>
   );
