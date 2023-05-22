@@ -71,9 +71,9 @@ const Navbar: FC<Props> = ({ window }) => {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", mb: 1 }}>
       <CssBaseline />
-      <AppBar component="nav">
+      <AppBar component="nav" variant="elevation" position="sticky" >
         <Toolbar>
           <IconButton
             color="inherit"
