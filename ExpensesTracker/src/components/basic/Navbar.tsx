@@ -107,19 +107,26 @@ const Navbar: FC<Props> = ({ window }) => {
               </Button>
             ))}
           </Box>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              display: { xs: "none", sm: "block" },
-              fontSize: {
-                sm: "1.0rem",
-                md: "1.3rem",
-              },
-            }}
-          >
-            Login
-          </Typography>
+
+          <Button key={"login"} sx={{ color: "#fff", mx: 2 }}>
+            <Link
+              to={"/login"}
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              <Typography
+                variant="h5"
+                sx={{
+                  textTransform: "none",
+                  fontSize: {
+                    sm: "1.0rem",
+                    md: "1.3rem",
+                  },
+                }}
+              >
+                Login
+              </Typography>
+            </Link>
+          </Button>
         </Toolbar>
       </AppBar>
       <Box component="nav">
