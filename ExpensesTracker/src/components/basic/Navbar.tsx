@@ -12,9 +12,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FC, useState } from "react";
 import routes from "../../constants/routes";
+import { useIsAuthenticated, useSignOut } from "react-auth-kit";
 
 interface Props {
   /**
@@ -27,6 +28,21 @@ interface Props {
 const drawerWidth = 240;
 
 const Navbar: FC<Props> = ({ window }) => {
+  // Auth state
+  const isAuthenticated = useIsAuthenticated()
+  const signOut = useSignOut()
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    signOut();
+    navigate("/login");
+  }
+
+  const takeToSignIn = () => {
+    navigate("login");
+  }
+
+  // UI state
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -108,7 +124,7 @@ const Navbar: FC<Props> = ({ window }) => {
             ))}
           </Box>
           <Button
-            key={"login"}
+            key={"login-logout"}
             sx={{
               color: "#fff",
               mx: 2,
@@ -117,11 +133,15 @@ const Navbar: FC<Props> = ({ window }) => {
                 sm: "block",
               },
             }}
+            onClick={() => {
+              if (isAuthenticated()) {
+                handleSignOut();
+                return;
+              }
+
+              takeToSignIn();
+            }}
           >
-            <Link
-              to={"/login"}
-              style={{ textDecoration: "none", color: "white" }}
-            >
               <Typography
                 variant="h5"
                 sx={{
@@ -132,9 +152,8 @@ const Navbar: FC<Props> = ({ window }) => {
                   },
                 }}
               >
-                Login
+                {isAuthenticated() ? "Logout" : "Login"}
               </Typography>
-            </Link>
           </Button>
         </Toolbar>
       </AppBar>

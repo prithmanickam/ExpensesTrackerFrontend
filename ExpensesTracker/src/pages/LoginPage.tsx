@@ -13,18 +13,43 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { Container } from "@mui/material";
 import { FC, FormEvent } from "react";
+import { useSignIn } from "react-auth-kit";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 
 const LoginPage: FC = () => {
+  const signIn = useSignIn();
+  const navigate = useNavigate();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const { mutate: handleSubmit, isLoading } = useMutation({
+    mutationFn: async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
 
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
+      const response = await axios({
+        method: 'get',
+        url: 'http://localhost:8080/api/auth',
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+
+      return response.data;
+    },
+
+    onSuccess: async (body) => {
+      if (signIn({
+        token: body.data,
+        tokenType: "Bearer",
+        expiresIn: 5,
+        // authState: { 
+        //   // Locally store non-sensitive user data here
+        //  }
+      })) {
+        navigate("/expense")
+      }
+    },
+  });
 
   return (
     <Container maxWidth="xl" disableGutters >
