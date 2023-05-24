@@ -23,9 +23,9 @@ function App() {
           path="/home"
           element={
             // TODO: RequireAuth is causing infinite re-renders
-            <RequireAuth loginPath="/login">
+            //<RequireAuth loginPath="/login">
               <HomePage />
-            </RequireAuth>
+            //</RequireAuth>
           }
         />
         <Route
