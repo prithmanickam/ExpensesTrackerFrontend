@@ -1,3 +1,3 @@
-const routes = ["Expense", "Networth", "Threads"];
+const routes = ["Home", "Recommendation", "Threads"];
 
 export default routes;

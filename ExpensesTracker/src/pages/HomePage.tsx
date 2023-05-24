@@ -1,7 +1,7 @@
 import { FC } from "react";
 
-const ExpensePage: FC = () => {
+const HomePage: FC = () => {
     return <div>Expense Tracker</div>
 }
 
-export default ExpensePage;
+export default HomePage;

@@ -3,10 +3,10 @@ import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import LandingPage from "./pages/LandingPage";
 import Navbar from "./components/basic/Navbar";
-import ExpensePage from "./pages/ExpensePage";
-import NetworthPage from "./pages/NetworthPage";
 import ThreadsPage from "./pages/ThreadsPage";
 import { RequireAuth } from "react-auth-kit";
+import HomePage from "./pages/HomePage";
+import RecommendationPage from "./pages/RecommendationPage";
 
 function App() {
   return (
@@ -20,19 +20,19 @@ function App() {
 
         {/* Private routes */}
         <Route
-          path="/expense"
+          path="/home"
           element={
             // TODO: RequireAuth is causing infinite re-renders
             <RequireAuth loginPath="/login">
-              <ExpensePage />
+              <HomePage />
             </RequireAuth>
           }
         />
         <Route
-          path="/networth"
+          path="/recommendation"
           element={
             <RequireAuth loginPath="/login">
-              <NetworthPage />
+              <RecommendationPage />
             </RequireAuth>
           }
         />
