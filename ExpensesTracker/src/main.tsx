@@ -30,6 +30,9 @@ const theme = createTheme({
       fontWeight: 600,
     },
   },
+  typography: {
+    "fontFamily": `Inter`
+  }
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

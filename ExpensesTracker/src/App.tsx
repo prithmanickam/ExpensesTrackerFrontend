@@ -27,7 +27,8 @@ function App() {
             //<RequireAuth loginPath="/login">
             <TransactionContextProvider>
               <HomePage />
-              </TransactionContextProvider>
+              {/* <ChartsData /> */}
+            </TransactionContextProvider>
             //</RequireAuth>
           }
         />

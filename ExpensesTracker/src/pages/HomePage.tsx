@@ -17,6 +17,7 @@ import {
   Typography,
   styled,
 } from "@mui/material";
+import { Textarea } from "@mui/joy"
 import { FC, useContext, useEffect, useRef, useState } from "react";
 import { Chart } from "react-google-charts";
 
@@ -33,6 +34,7 @@ import {
   Transaction,
   TransactionContext,
 } from "../context/TransactionContext";
+import TransactionCard from "../components/TransactionCard";
 
 const style = {
   position: "absolute",
@@ -104,7 +106,7 @@ const HomePage: FC = () => {
     date: new Date(),
   });
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date): string => {
     const d = new Date(date),
       month = "" + (d.getMonth() + 1),
       day = "" + d.getDate(),
@@ -116,6 +118,8 @@ const HomePage: FC = () => {
       day.length < 2 ? "0" + day : day,
     ].join("-");
   };
+
+  // here
 
   return (
     <div>
@@ -131,7 +135,8 @@ const HomePage: FC = () => {
         alignItems="center"
         spacing={2}
       >
-        <Chart
+        {/* <StackedBarChart /> */}
+        {/* <Chart
           chartType="PieChart"
           data={chartsData}
           options={options}
@@ -153,7 +158,7 @@ const HomePage: FC = () => {
           height="400px"
           data={barChartData}
           options={barChartOptions}
-        />
+        /> */}
       </Stack>
 
       <Stack display="flex" justifyContent="center" alignItems="center">
@@ -236,6 +241,14 @@ const HomePage: FC = () => {
                     }));
                   }}
                 />
+                <Textarea
+                  color="primary"
+                  disabled={false}
+                  minRows={2}
+                  placeholder="Description"
+                  size="lg"
+                  variant="outlined"
+                />
                 <Button
                   variant="contained"
                   onClick={() => {
@@ -252,52 +265,9 @@ const HomePage: FC = () => {
 
         <Typography sx={{ fontSize: 24 }}>Past Transactions</Typography>
 
-        {transactions.map((transaction, idx) => {
-          const { amount, category, date, title, type } = transaction;
-
-          return (
-            <>
-              <Card
-                variant="outlined"
-                sx={{ minWidth: 675, m: 1, borderColor: type === "Expense" ? "red" : "blue" }}
-                key={`transaction-${idx}`}
-              >
-                <CardContent>
-
-                <Stack
-                  direction={{ xs: "column", sm: "row" }}
-                  justifyContent="center"
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    {category}
-                  </Typography>
-                
-                  <Typography 
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    {date.getDay()}/{date.getMonth()}/{date.getFullYear()}
-                  </Typography>
-                  
-                  </Stack>
-                  <Typography variant="h5" component="div">
-                    {title}
-                  </Typography>
-                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    £{amount}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </>
-          );
-        })}
+        {transactions.map((transaction, idx) => (
+          <TransactionCard {...transaction} idx={idx} />
+        ))}
       </Stack>
     </div>
   );
