@@ -28,36 +28,11 @@ import {
   barChartData,
   barChartOptions,
 } from "../constants/chartsMockData";
-import React from "react";
-
-type Transaction = {
-  expenseName: string;
-  expenseCategory:
-    | "ENTERTAINMENT"
-    | "GROCERIES"
-    | "RESTAURANT"
-    | "UTILITIES"
-    | "MISC";
-  expenseAmount: number;
-  expenseDate: string;
-};
-
-const getMockedData = (): Transaction[] => {
-  return [
-    {
-      expenseName: "Fish",
-      expenseCategory: "GROCERIES",
-      expenseAmount: 10,
-      expenseDate: "10-10-2023",
-    },
-    {
-      expenseName: "Tesco Food",
-      expenseCategory: "GROCERIES",
-      expenseAmount: 5,
-      expenseDate: "03-05-2017",
-    },
-  ];
-};
+import {
+  Categories,
+  Transaction,
+  TransactionContext,
+} from "../context/TransactionContext";
 
 const style = {
   position: "absolute",
@@ -70,20 +45,6 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-
-// @Field(name = "name")
-//     @Indexed(unique = true)
-//     private String expenseName;
-
-//     @Field(name = "category")
-//     private ExpenseCategory expenseCategory;
-
-//     @Field(name = "amount")
-//     private BigDecimal expenseAmount;
-
-// public enum ExpenseCategory {
-//   ENTERTAINMENT, GROCERIES, RESTAURANT, UTILITIES, MISC
-// }
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
   width: 28,
@@ -130,28 +91,30 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 const HomePage: FC = () => {
-  const [data, setData] = useState<Transaction[]>(getMockedData());
-  // const dataRef = useRef(data);
+  // Transaction state
+  const { transactions, addTransaction } = useContext(TransactionContext);
 
-  useEffect(() => {
-    // Executes when dependency array changes
-    // pushToHomePage();
-  }, [data]);
+  // Modal state
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalInput, setModalInput] = useState<Transaction>({
+    category: "ENTERTAINMENT",
+    type: "Expense",
+    title: "",
+    amount: "0",
+    date: new Date(),
+  });
 
-  useEffect(() => {
-    // Executes on page load
-  }, []);
+  const formatDate = (date: Date) => {
+    const d = new Date(date),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
 
-  // useContext();
-
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const [category, setCategory] = React.useState("");
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setCategory(event.target.value as string);
+    return [
+      year,
+      month.length < 2 ? "0" + month : month,
+      day.length < 2 ? "0" + day : day,
+    ].join("-");
   };
 
   return (
@@ -193,16 +156,12 @@ const HomePage: FC = () => {
         />
       </Stack>
 
-      <Stack
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="50vh" // Adjust the height as per your requirements
-      >
-        <Button onClick={handleOpen}>Add Expenses</Button>
+      <Stack display="flex" justifyContent="center" alignItems="center">
+        <Typography sx={{ fontSize: 24 }}>Balance: £5000</Typography>
+        <Button onClick={() => setModalIsOpen(true)}>Add Expenses</Button>
         <Modal
-          open={open}
-          onClose={handleClose}
+          open={modalIsOpen}
+          onClose={() => setModalIsOpen(false)}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
@@ -223,64 +182,118 @@ const HomePage: FC = () => {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={category}
+                  value={modalInput?.category}
                   label="Catagory"
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setModalInput((prev) => ({
+                      ...prev,
+                      category: e.target.value as Categories,
+                    }));
+                  }}
                 >
                   <MenuItem value="ENTERTAINMENT">ENTERTAINMENT</MenuItem>
                   <MenuItem value="GROCERIES">GROCERIES</MenuItem>
                   <MenuItem value="UTILITIES">UTILITIES</MenuItem>
                   <MenuItem value="MISC">MISC</MenuItem>
                 </Select>
+
+                <TextField
+                  id="outlined-basic"
+                  label="Expense title/desc"
+                  variant="outlined"
+                  type="text"
+                  value={modalInput?.title}
+                  onChange={(e) => {
+                    setModalInput((prev) => ({
+                      ...prev,
+                      title: e.target.value as string,
+                    }));
+                  }}
+                />
+                <TextField
+                  id="outlined-basic"
+                  label="Expense amount"
+                  variant="outlined"
+                  type="number"
+                  value={modalInput?.amount}
+                  onChange={(e) => {
+                    setModalInput((prev) => ({
+                      ...prev,
+                      amount: e.target.value as string,
+                    }));
+                  }}
+                />
+                <TextField
+                  id="outlined-basic"
+                  label="Date"
+                  variant="outlined"
+                  type="date"
+                  value={modalInput?.date ? formatDate(modalInput.date) : ""}
+                  onChange={(e) => {
+                    setModalInput((prev) => ({
+                      ...prev,
+                      date: new Date(e.target.value),
+                    }));
+                  }}
+                />
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    addTransaction(modalInput);
+                    setModalIsOpen(false);
+                  }}
+                >
+                  Submit
+                </Button>
               </FormControl>
-              <TextField
-                id="outlined-basic"
-                label="Expense title/desc"
-                variant="outlined"
-              />
-              <TextField
-                id="outlined-basic"
-                label="Expense amount"
-                variant="outlined"
-              />
-              <TextField
-                id="outlined-basic"
-                label="Date (optional)"
-                variant="outlined"
-              />
-              <Button variant="contained">Submit</Button>
             </Stack>
           </Box>
         </Modal>
 
         <Typography sx={{ fontSize: 24 }}>Past Transactions</Typography>
 
-        {data.map((d) => {
-          const { expenseAmount, expenseCategory, expenseDate, expenseName } =
-            d;
+        {transactions.map((transaction, idx) => {
+          const { amount, category, date, title, type } = transaction;
 
           return (
             <>
-              <Card variant="outlined" sx={{ minWidth: 675 }}>
+              <Card
+                variant="outlined"
+                sx={{ minWidth: 675, m: 1, borderColor: type === "Expense" ? "red" : "blue" }}
+                key={`transaction-${idx}`}
+              >
                 <CardContent>
+
+                <Stack
+                  direction={{ xs: "column", sm: "row" }}
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={2}
+                >
                   <Typography
                     sx={{ fontSize: 14 }}
                     color="text.secondary"
                     gutterBottom
                   >
-                    {expenseCategory}
+                    {category}
                   </Typography>
+                
+                  <Typography 
+                    sx={{ fontSize: 14 }}
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    {date.getDay()}/{date.getMonth()}/{date.getFullYear()}
+                  </Typography>
+                  
+                  </Stack>
                   <Typography variant="h5" component="div">
-                    {expenseName}
+                    {title}
                   </Typography>
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    £{expenseAmount}
+                    £{amount}
                   </Typography>
-                  <Typography variant="body2">{expenseDate}</Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small">Learn More</Button>
-                </CardActions>
               </Card>
             </>
           );
