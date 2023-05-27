@@ -29,18 +29,18 @@ const drawerWidth = 240;
 
 const Navbar: FC<Props> = ({ window }) => {
   // Auth state
-  const isAuthenticated = useIsAuthenticated()
-  const signOut = useSignOut()
+  const isAuthenticated = useIsAuthenticated();
+  const signOut = useSignOut();
   const navigate = useNavigate();
 
   const handleSignOut = () => {
     signOut();
     navigate("/login");
-  }
+  };
 
   const takeToSignIn = () => {
     navigate("login");
-  }
+  };
 
   // UI state
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -89,7 +89,7 @@ const Navbar: FC<Props> = ({ window }) => {
   return (
     <Box sx={{ display: "flex", mb: 1 }}>
       <CssBaseline />
-      <AppBar component="nav" variant="elevation" position="sticky" >
+      <AppBar component="nav" variant="elevation" position="sticky">
         <Toolbar>
           <IconButton
             color="inherit"
@@ -102,11 +102,11 @@ const Navbar: FC<Props> = ({ window }) => {
           </IconButton>
           <Box sx={{ display: { xs: "none", sm: "block" }, flexGrow: 1 }}>
             {routes.map((item) => (
-              <Button key={item} sx={{ color: "#fff", mx: 2 }}>
-                <Link
-                  to={`/${item}`}
-                  style={{ textDecoration: "none", color: "white" }}
-                >
+              <Link
+                to={`/${item}`}
+                style={{ textDecoration: "none", color: "white" }}
+              >
+                <Button key={item} sx={{ color: "#fff", mx: 2 }}>
                   <Typography
                     variant="h5"
                     sx={{
@@ -119,8 +119,8 @@ const Navbar: FC<Props> = ({ window }) => {
                   >
                     {item}
                   </Typography>
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             ))}
           </Box>
           <Button
@@ -142,18 +142,18 @@ const Navbar: FC<Props> = ({ window }) => {
               takeToSignIn();
             }}
           >
-              <Typography
-                variant="h5"
-                sx={{
-                  textTransform: "none",
-                  fontSize: {
-                    sm: "1.0rem",
-                    md: "1.3rem",
-                  },
-                }}
-              >
-                {isAuthenticated() ? "Logout" : "Login"}
-              </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                textTransform: "none",
+                fontSize: {
+                  sm: "1.0rem",
+                  md: "1.3rem",
+                },
+              }}
+            >
+              {isAuthenticated() ? "Logout" : "Login"}
+            </Typography>
           </Button>
         </Toolbar>
       </AppBar>
