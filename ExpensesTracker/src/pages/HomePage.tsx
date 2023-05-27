@@ -4,6 +4,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  Divider,
   FormControl,
   Grid,
   InputLabel,
@@ -17,9 +18,10 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import TextareaAutosize from "@mui/base/TextareaAutosize";
+import Textarea from "@mui/joy/Textarea";
 import { FC, useContext, useEffect, useRef, useState } from "react";
 import { Chart } from "react-google-charts";
+import TextareaAutosize from "react-textarea-autosize";
 
 import {
   data as chartsData,
@@ -35,18 +37,6 @@ import {
   TransactionContext,
 } from "../context/TransactionContext";
 import TransactionCard from "../components/TransactionCard";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
   width: 28,
@@ -102,6 +92,7 @@ const HomePage: FC = () => {
     category: "ENTERTAINMENT",
     type: "Expense",
     title: "",
+    description: "",
     amount: "0",
     date: new Date(),
   });
@@ -167,10 +158,22 @@ const HomePage: FC = () => {
         <Modal
           open={modalIsOpen}
           onClose={() => setModalIsOpen(false)}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
+          aria-labelledby="modal-add-expense"
+          aria-describedby="modal-add-expense"
         >
-          <Box sx={style}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              border: "2px solid #000",
+              boxShadow: 24,
+              p: 4,
+            }}
+          >
             <Typography
               id="modal-modal-title"
               variant="h6"
@@ -179,7 +182,7 @@ const HomePage: FC = () => {
             >
               Add Expense
             </Typography>
-            <Stack>
+            <Stack direction="column" >
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
                   Expense category
@@ -241,9 +244,19 @@ const HomePage: FC = () => {
                     }));
                   }}
                 />
-                
-                  
-
+                <TextField
+                  id="outlined-basic"
+                  label="Description"
+                  variant="outlined"
+                  type="text"
+                  value={modalInput?.description}
+                  onChange={(e) => {
+                    setModalInput((prev) => ({
+                      ...prev,
+                      description: e.target.value as string,
+                    }));
+                  }}
+                />
                 <Button
                   variant="contained"
                   onClick={() => {

@@ -6,6 +6,7 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "react-auth-kit";
 import { default as QueryClientProvider } from "./components/basic/Providers.tsx";
+import { Toaster } from "react-hot-toast";
 
 const theme = createTheme({
   palette: {
@@ -31,8 +32,8 @@ const theme = createTheme({
     },
   },
   typography: {
-    "fontFamily": `Inter`
-  }
+    fontFamily: `Inter`,
+  },
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
@@ -47,6 +48,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       >
         <QueryClientProvider>
           <BrowserRouter>
+            <Toaster position="top-center" />
             <App />
           </BrowserRouter>
         </QueryClientProvider>

@@ -6,6 +6,7 @@ import {
   createContext,
   useState,
 } from "react";
+import toast from "react-hot-toast";
 
 export type Categories =
   | "ENTERTAINMENT"
@@ -22,6 +23,7 @@ export type Transaction = {
   type: ExpenseOrAsset;
   category: Categories;
   title: string;
+  description: string;
   amount: string;
   date: Date;
 };
@@ -44,6 +46,7 @@ export const TransactionContextProvider = ({
     {
       type: "Expense",
       title: "Fish",
+      description: "Bought Salmon on sale. Not sure why the meat's green though.",
       category: "GROCERIES",
       amount: '10',
       date: new Date("2023-10-10"),
@@ -51,6 +54,7 @@ export const TransactionContextProvider = ({
     {
       type: "Expense",
       title: "Tesco Food",
+      description: "Totally not overloaded with sodium",
       category: "GROCERIES",
       amount: '5',
       date: new Date("2017-05-03"),
@@ -58,6 +62,11 @@ export const TransactionContextProvider = ({
   ]);
 
   const addTransaction = (newTransaction: Transaction): void => {
+    if (newTransaction.title.length <= 0) {
+      toast.error("Title cannot be empty")
+      return;
+    }
+
     setTransactions((prev) => [...prev, newTransaction]);
   };
 
