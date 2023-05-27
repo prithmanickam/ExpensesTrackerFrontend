@@ -1,0 +1,3 @@
+const placeholderFunction = (): void => {
+    return;
+}

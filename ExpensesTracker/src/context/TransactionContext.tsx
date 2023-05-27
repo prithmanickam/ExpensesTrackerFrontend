@@ -40,20 +40,21 @@ export const TransactionContextProvider = ({
   children: ReactNode;
 }): JSX.Element => {
   // We'd pull this from our backend
+  //year-month-day
   const [transactions, setTransactions] = useState<Transaction[]>([
     {
       type: "Expense",
       title: "Fish",
       category: "GROCERIES",
       amount: '10',
-      date: new Date("2023-10-10"),
+      date: new Date("2023-05-27"),
     },
     {
       type: "Expense",
       title: "Tesco Food",
-      category: "GROCERIES",
+      category: "RESTAURANT",
       amount: '5',
-      date: new Date("2017-05-03"),
+      date: new Date("2023-05-27"),
     },
   ]);
 

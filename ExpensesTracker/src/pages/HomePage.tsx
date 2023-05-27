@@ -35,6 +35,8 @@ import {
   TransactionContext,
 } from "../context/TransactionContext";
 import TransactionCard from "../components/TransactionCard";
+import StackedBarChart from "../components/charts/StackedBarChart";
+import DonutChart from "../components/charts/DonutChart";
 
 const style = {
   position: "absolute",
@@ -108,7 +110,7 @@ const HomePage: FC = () => {
 
   const formatDate = (date: Date): string => {
     const d = new Date(date),
-      month = "" + (d.getMonth() + 1),
+      month = "" + (d.getMonth() ),
       day = "" + d.getDate(),
       year = d.getFullYear();
 
@@ -135,7 +137,8 @@ const HomePage: FC = () => {
         alignItems="center"
         spacing={2}
       >
-        {/* <StackedBarChart /> */}
+        <StackedBarChart /> 
+        <DonutChart /> 
         {/* <Chart
           chartType="PieChart"
           data={chartsData}

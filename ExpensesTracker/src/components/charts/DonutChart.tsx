@@ -14,7 +14,6 @@ const StackedBarChart: FC = () => {
   const formattedDate = currentDate.toLocaleDateString("en-GB");
   const currentMonth = Number(formattedDate.substring(3, 5));
 
-  // Turn transactions into this shape
   // Desired data structure
   // { month: {
   //    category: summedAmount
@@ -25,6 +24,7 @@ const StackedBarChart: FC = () => {
       [key in Categories]: number;
     };
   } = {};
+
 
   const categoriesArray: Categories[] = [
     "ENTERTAINMENT",
@@ -49,56 +49,41 @@ const StackedBarChart: FC = () => {
   };
 
   for (let idx = 0; idx < 5; idx++) {
-    // Python: (-3 % 12) = 9?
-    // 12 % 5 = 2
-    const month = ((currentMonth - idx - 1 + 12) % 12) + 1; // weird js shit from GPT
+    const month = ((currentMonth - idx - 1 + 12) % 12) + 1; //works out number of the month (1-12)
     fiveLatestMonthsTally[month] = { ...startingValues };
   }
 
   transactions.forEach((transaction) => {
-    // TODO: Only work with the previous/current year. Also account where we fetch data from last year
     const { category, amount, date } = transaction;
     const transactionMonth = date.getMonth();
 
     fiveLatestMonthsTally[transactionMonth][category] += Number(amount);
   });
 
-  // Turn our data into a GG Charts compatible one
-  const stackedBarData = [["Month", ...categoriesArray]];
+  const donutGraphData = [
+    ["Category", "£ spent"],
+    ["Groceries", fiveLatestMonthsTally[currentMonth-1]["GROCERIES"]],
+    ["Entertainment", fiveLatestMonthsTally[currentMonth-1]["ENTERTAINMENT"]],
+    ["Restaurant", fiveLatestMonthsTally[currentMonth-1]["RESTAURANT"]],
+    ["Utlities", fiveLatestMonthsTally[currentMonth-1]["UTILITIES"]],
+    ["Misc", fiveLatestMonthsTally[currentMonth-1]["MISC"]],
+  ];
 
-  for (let idx = 0; idx < 5; idx++) {
-    const month = ((currentMonth - idx - 1 + 12) % 12) + 1; //works out number of the month (1-12)
-
-    const row: any[] = [`Month${idx + 1}`];
-
-    categoriesArray.forEach((category) => {
-      row.push(fiveLatestMonthsTally[month][category]);
-    });
-
-    stackedBarData.push(row);
-  }
-
-  const stackedBarOptions = {
-    title: "Spend and distribution of categories last 5 months",
-    chartArea: { width: "50%" },
-    isStacked: true,
-    hAxis: {
-      title: "Expenses in Each Category",
-      minValue: 0,
-    },
-    vAxis: {
-      title: "Five Recent Months",
-    },
+  const donutGraphOptions = {
+    title: "This month category spread",
+    pieHole: 0.4,
+    is3D: false,
   };
 
+
   return (
-    <Chart
-      chartType="BarChart"
-      width="100%"
-      height="400px"
-      data={stackedBarData}
-      options={stackedBarOptions}
-    />
+          <Chart
+        chartType="PieChart"
+        width="100%"
+        height="400px"
+        data={donutGraphData}
+        options={donutGraphOptions}
+      />
   );
 };
 
