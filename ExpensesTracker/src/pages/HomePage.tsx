@@ -182,7 +182,7 @@ const HomePage: FC = () => {
             >
               Add Expense
             </Typography>
-            <Stack direction="column" >
+            <Stack direction="column">
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
                   Expense category
@@ -261,7 +261,17 @@ const HomePage: FC = () => {
                   variant="contained"
                   onClick={() => {
                     addTransaction(modalInput);
-                    setModalIsOpen(false);
+                    if (modalInput.title.length > 0) {
+                      setModalIsOpen(false);
+                      setModalInput({
+                        category: "ENTERTAINMENT",
+                        type: "Expense",
+                        title: "",
+                        description: "",
+                        amount: "0",
+                        date: new Date(),
+                      });
+                    }
                   }}
                 >
                   Submit

@@ -41,7 +41,7 @@ const TransactionCard: FC<Transaction & { idx: number }> = ({
       >
         <CardContent>
           <Stack
-            direction={{ xs: "column", sm: "row" }}
+            direction="row"
             justifyContent="space-between"
             alignItems="center"
             alignContent="center"
@@ -82,37 +82,40 @@ const TransactionCard: FC<Transaction & { idx: number }> = ({
                   placement="top"
                   arrow
                 >
-                  {!expanded ? (
-                    <ExpandMoreIcon
-                      sx={{
-                        ":hover": {
-                          cursor: "pointer",
-                        },
-                      }}
-                      onClick={() => setExpanded((prev) => !prev)}
-                    />
-                  ) : (
-                    <ExpandLessIcon
-                      sx={{
-                        ":hover": {
-                          cursor: "pointer",
-                        },
-                      }}
-                      onClick={() => setExpanded((prev) => !prev)}
-                    />
-                  )}
+                  <IconButton onClick={() => setExpanded((prev) => !prev)}>
+                    {!expanded ? (
+                      <ExpandMoreIcon
+                        sx={{
+                          ":hover": {
+                            cursor: "pointer",
+                          },
+                        }}
+                      />
+                    ) : (
+                      <ExpandLessIcon
+                        sx={{
+                          ":hover": {
+                            cursor: "pointer",
+                          },
+                        }}
+                      />
+                    )}
+                  </IconButton>
                 </Tooltip>
               </Box>
-
               <Tooltip title="Delete" placement="top" arrow>
-                <DeleteIcon
-                  color="error"
-                  sx={{
-                    ":hover": {
-                      cursor: "pointer",
-                    },
-                  }}
-                />
+                <IconButton
+                  // onClick: handle deletion request
+                >
+                  <DeleteIcon
+                    color="error"
+                    sx={{
+                      ":hover": {
+                        cursor: "pointer",
+                      },
+                    }}
+                  />
+                </IconButton>
               </Tooltip>
             </Stack>
             {description.length > 0 ? (
