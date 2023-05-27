@@ -17,7 +17,7 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import { Textarea } from "@mui/joy"
+import TextareaAutosize from "@mui/base/TextareaAutosize";
 import { FC, useContext, useEffect, useRef, useState } from "react";
 import { Chart } from "react-google-charts";
 
@@ -241,14 +241,9 @@ const HomePage: FC = () => {
                     }));
                   }}
                 />
-                <Textarea
-                  color="primary"
-                  disabled={false}
-                  minRows={2}
-                  placeholder="Description"
-                  size="lg"
-                  variant="outlined"
-                />
+                
+                  
+
                 <Button
                   variant="contained"
                   onClick={() => {

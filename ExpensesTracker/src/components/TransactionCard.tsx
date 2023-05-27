@@ -108,23 +108,36 @@ const TransactionCard: FC<Transaction & { idx: number }> = ({
                 placement="top"
                 arrow
               >
-                <IconButton>
-                  {!expanded ? (
-                    <ExpandMoreIcon
-                      onClick={() => setExpanded((prev) => !prev)}
-                    />
-                  ) : (
-                    <ExpandLessIcon
-                      onClick={() => setExpanded((prev) => !prev)}
-                    />
-                  )}
-                </IconButton>
+                {!expanded ? (
+                  <ExpandMoreIcon
+                    sx={{
+                      ":hover": {
+                        cursor: "pointer",
+                      },
+                    }}
+                    onClick={() => setExpanded((prev) => !prev)}
+                  />
+                ) : (
+                  <ExpandLessIcon
+                    sx={{
+                      ":hover": {
+                        cursor: "pointer",
+                      },
+                    }}
+                    onClick={() => setExpanded((prev) => !prev)}
+                  />
+                )}
               </Tooltip>
 
               <Tooltip title="Delete" placement="top" arrow>
-                <IconButton>
-                  <DeleteIcon color="error" />
-                </IconButton>
+                <DeleteIcon
+                  color="error"
+                  sx={{
+                    ":hover": {
+                      cursor: "pointer",
+                    },
+                  }}
+                />
               </Tooltip>
             </Stack>
             <Collapse in={expanded} timeout="auto" unmountOnExit>

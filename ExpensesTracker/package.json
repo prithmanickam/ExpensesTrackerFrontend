@@ -24,6 +24,7 @@
     "react-dom": "^18.2.0",
     "react-google-charts": "^4.0.0",
     "react-router-dom": "^6.11.2",
+    "react-textarea-autosize": "^8.4.1",
     "sort-by": "^1.2.0"
   },
   "devDependencies": {
