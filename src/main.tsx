@@ -18,6 +18,7 @@ const theme = createTheme({
     },
   },
   typography: {
+    fontFamily: `Inter`,
     h1: {
       fontSize: "3rem",
       fontWeight: 600,
@@ -30,9 +31,6 @@ const theme = createTheme({
       fontSize: "1.5rem",
       fontWeight: 600,
     },
-  },
-  typography: {
-    fontFamily: `Inter`,
   },
 });
 
