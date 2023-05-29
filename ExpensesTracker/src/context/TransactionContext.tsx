@@ -60,6 +60,30 @@ export const TransactionContextProvider = ({
       amount: '5',
       date: new Date("2023-05-27"),
     },
+    {
+      type: "Expense",
+      title: "Netflix subscription",
+      description: "I forgot to unsubscribe",
+      category: "ENTERTAINMENT",
+      amount: '10',
+      date: new Date("2023-05-27"),
+    },
+    {
+      type: "Expense",
+      title: "Netflix subscription",
+      description: "this will be money well spent",
+      category: "ENTERTAINMENT",
+      amount: '10',
+      date: new Date("2023-04-27"),
+    },
+    {
+      type: "Expense",
+      title: "Ramen Place",
+      description: "The expenditure equals the value of sustenance for many sunsets, and my kin shall not grant me forgiveness",
+      category: "RESTAURANT",
+      amount: '20',
+      date: new Date("2023-04-16"),
+    },
   ]);
 
   const addTransaction = (newTransaction: Transaction): void => {

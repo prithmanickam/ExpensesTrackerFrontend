@@ -10,6 +10,7 @@ import {
   InputLabel,
   MenuItem,
   Modal,
+  Pagination,
   Select,
   SelectChangeEvent,
   Stack,
@@ -112,8 +113,33 @@ const HomePage: FC = () => {
     ].join("-");
   };
 
-  // here
+  // pagination
 
+  const dataPerPage = 2;
+
+  const [page, setPage] = useState(1);
+  
+  const [totalPages, setTotalPages] = useState(
+    Math.ceil(transactions.length / dataPerPage)
+  );
+
+  const startIndex = (page - 1) * dataPerPage;
+  
+  const [selectData, setSelectData] = useState(
+    transactions.slice(startIndex, startIndex + dataPerPage)
+  );
+
+  const [filter, setFilter] = useState(selectData);
+
+  const handleChange = (event, value) => {
+    const newStartIndex = (value - 1) * dataPerPage;
+    const newFilter = transactions.slice(newStartIndex, newStartIndex + dataPerPage);
+  
+    setPage(value);
+    setFilter(newFilter);
+  };
+
+  
   return (
     <div>
       <Stack direction="row" spacing={1} alignItems="center">
@@ -286,9 +312,14 @@ const HomePage: FC = () => {
 
         <Typography sx={{ fontSize: 24 }}>Past Transactions</Typography>
 
-        {transactions.map((transaction, idx) => (
+        {filter.map((transaction, idx) => (
           <TransactionCard {...transaction} idx={idx} />
         ))}
+        <Pagination
+          count={totalPages}
+          color="primary"
+          onChange={handleChange}
+        />
       </Stack>
     </div>
   );
