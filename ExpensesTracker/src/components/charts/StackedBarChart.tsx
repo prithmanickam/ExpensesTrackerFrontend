@@ -49,9 +49,7 @@ const StackedBarChart: FC = () => {
   };
 
   for (let idx = 0; idx < 5; idx++) {
-    // Python: (-3 % 12) = 9?
-    // 12 % 5 = 2
-    const month = ((currentMonth - idx - 1 + 12) % 12) + 1; // weird js shit from GPT
+    const month = ((currentMonth - idx - 1 + 12) % 12) + 1; // work of the number of the current month
     fiveLatestMonthsTally[month] = { ...startingValues };
   }
 
@@ -63,13 +61,31 @@ const StackedBarChart: FC = () => {
     fiveLatestMonthsTally[transactionMonth][category] += Number(amount);
   });
 
+  type MonthDictionary = { [monthNumber: number]: string };
+
+  const monthDictionary: MonthDictionary = {
+    1: "Jan",
+    2: "Feb",
+    3: "Mar",
+    4: "Apr",
+    5: "May",
+    6: "Jun",
+    7: "Jul",
+    8: "Aug",
+    9: "Sep",
+    10: "Oct",
+    11: "Nov",
+    12: "Dec",
+  };
+
   // Turn our data into a GG Charts compatible one
   const stackedBarData = [["Month", ...categoriesArray]];
 
   for (let idx = 0; idx < 5; idx++) {
     const month = ((currentMonth - idx - 1 + 12) % 12) + 1; //works out number of the month (1-12)
+    const monthString = monthDictionary[month + 1];
 
-    const row: any[] = [`Month${idx + 1}`];
+    const row: any[] = [monthString];
 
     categoriesArray.forEach((category) => {
       row.push(fiveLatestMonthsTally[month][category]);
@@ -83,11 +99,11 @@ const StackedBarChart: FC = () => {
     chartArea: { width: "50%" },
     isStacked: true,
     hAxis: {
-      title: "Expenses in Each Category",
+      title: "Expenses in Each Category (£)",
       minValue: 0,
     },
     vAxis: {
-      title: "Five Recent Months",
+      title: "Past 5 Months",
     },
   };
 
