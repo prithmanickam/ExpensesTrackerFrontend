@@ -22,7 +22,7 @@ const LoginPage: FC = () => {
   const signIn = useSignIn();
   const navigate = useNavigate();
 
-  const { mutate: handleSubmit, isLoading } = useMutation({
+  const { mutate: handleSubmit } = useMutation({
     mutationFn: async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
