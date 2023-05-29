@@ -12,6 +12,7 @@ import { TransactionContextProvider } from "./context/TransactionContext";
 function App() {
   return (
     <>
+      <h1>This is for testing purposes!</h1>
       <Navbar />
       <Routes>
         {/* Public Routes */}
