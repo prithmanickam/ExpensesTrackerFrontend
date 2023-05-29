@@ -60,7 +60,7 @@ const TransactionCard: FC<Transaction & { idx: number }> = ({
               color="text.secondary"
               gutterBottom
             >
-              {date.getDay()}/{date.getMonth()}/{date.getFullYear()}
+              {date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}
             </Typography>
           </Stack>
           <Typography variant="h5" component="div">

@@ -102,8 +102,8 @@ const HomePage: FC = () => {
 
   const formatDate = (date: Date): string => {
     const d = new Date(date),
-      month = "" + (d.getMonth() ),
-      day = "" + d.getDate(),
+      month = "" + (d.getMonth() + 1),
+      day = "" + (d.getDate()),
       year = d.getFullYear();
 
     return [
@@ -131,10 +131,12 @@ const HomePage: FC = () => {
 
   const [filter, setFilter] = useState(selectData);
 
+  console.log(totalPages);
+
   const handleChange = (event, value) => {
     const newStartIndex = (value - 1) * dataPerPage;
     const newFilter = transactions.slice(newStartIndex, newStartIndex + dataPerPage);
-  
+    setTotalPages(Math.ceil(transactions.length / dataPerPage));
     setPage(value);
     setFilter(newFilter);
   };
@@ -147,7 +149,7 @@ const HomePage: FC = () => {
         <AntSwitch defaultChecked inputProps={{ "aria-label": "ant design" }} />
         <Typography>Asset graphs</Typography>
       </Stack>
-
+      
       <Stack
         direction={{ xs: "column", sm: "row" }}
         justifyContent="center"
@@ -230,13 +232,14 @@ const HomePage: FC = () => {
                 >
                   <MenuItem value="ENTERTAINMENT">ENTERTAINMENT</MenuItem>
                   <MenuItem value="GROCERIES">GROCERIES</MenuItem>
+                  <MenuItem value="RESTAURANT">RESTAURANT</MenuItem>
                   <MenuItem value="UTILITIES">UTILITIES</MenuItem>
                   <MenuItem value="MISC">MISC</MenuItem>
                 </Select>
 
                 <TextField
                   id="outlined-basic"
-                  label="Expense title/desc"
+                  label="Expense title"
                   variant="outlined"
                   type="text"
                   value={modalInput?.title}
@@ -269,7 +272,7 @@ const HomePage: FC = () => {
                   onChange={(e) => {
                     setModalInput((prev) => ({
                       ...prev,
-                      date: new Date(e.target.value),
+                      date: new Date(e.target.value as string),
                     }));
                   }}
                 />
