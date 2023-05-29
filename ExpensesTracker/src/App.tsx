@@ -7,6 +7,7 @@ import ThreadsPage from "./pages/ThreadsPage";
 import { RequireAuth } from "react-auth-kit";
 import HomePage from "./pages/HomePage";
 import RecommendationPage from "./pages/RecommendationPage";
+import { TransactionContextProvider } from "./context/TransactionContext";
 
 function App() {
   return (
@@ -23,9 +24,12 @@ function App() {
           path="/home"
           element={
             // TODO: RequireAuth is causing infinite re-renders
-            <RequireAuth loginPath="/login">
+            //<RequireAuth loginPath="/login">
+            <TransactionContextProvider>
               <HomePage />
-            </RequireAuth>
+              {/* <ChartsData /> */}
+            </TransactionContextProvider>
+            //</RequireAuth>
           }
         />
         <Route
