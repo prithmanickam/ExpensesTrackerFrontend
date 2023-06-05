@@ -19,19 +19,7 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import Textarea from "@mui/joy/Textarea";
 import { FC, useContext, useEffect, useRef, useState } from "react";
-import { Chart } from "react-google-charts";
-import TextareaAutosize from "react-textarea-autosize";
-
-import {
-  data as chartsData,
-  options,
-  stackedBarData,
-  stackedBarOptions,
-  barChartData,
-  barChartOptions,
-} from "../constants/chartsMockData";
 import {
   Categories,
   Transaction,
@@ -40,50 +28,10 @@ import {
 import TransactionCard from "../components/TransactionCard";
 import StackedBarChart from "../components/charts/StackedBarChart";
 import DonutChart from "../components/charts/DonutChart";
-
-const AntSwitch = styled(Switch)(({ theme }) => ({
-  width: 28,
-  height: 16,
-  padding: 0,
-  display: "flex",
-  "&:active": {
-    "& .MuiSwitch-thumb": {
-      width: 15,
-    },
-    "& .MuiSwitch-switchBase.Mui-checked": {
-      transform: "translateX(9px)",
-    },
-  },
-  "& .MuiSwitch-switchBase": {
-    padding: 2,
-    "&.Mui-checked": {
-      transform: "translateX(12px)",
-      color: "#fff",
-      "& + .MuiSwitch-track": {
-        opacity: 1,
-        backgroundColor: theme.palette.mode === "dark" ? "#177ddc" : "#1890ff",
-      },
-    },
-  },
-  "& .MuiSwitch-thumb": {
-    boxShadow: "0 2px 4px 0 rgb(0 35 11 / 20%)",
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    transition: theme.transitions.create(["width"], {
-      duration: 200,
-    }),
-  },
-  "& .MuiSwitch-track": {
-    borderRadius: 16 / 2,
-    opacity: 1,
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? "rgba(255,255,255,.35)"
-        : "rgba(0,0,0,.25)",
-    boxSizing: "border-box",
-  },
-}));
+import AntSwitch from "../components/basic/AntSwitch";
+import { formatDate } from "../lib/utils";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const HomePage: FC = () => {
   // Transaction state
@@ -100,48 +48,81 @@ const HomePage: FC = () => {
     date: new Date(),
   });
 
-  const formatDate = (date: Date): string => {
-    const d = new Date(date),
-      month = "" + (d.getMonth() + 1),
-      day = "" + (d.getDate()),
-      year = d.getFullYear();
-
-    return [
-      year,
-      month.length < 2 ? "0" + month : month,
-      day.length < 2 ? "0" + day : day,
-    ].join("-");
-  };
-
   // pagination
 
   const dataPerPage = 2;
 
   const [page, setPage] = useState(1);
-  
+
   const [totalPages, setTotalPages] = useState(
     Math.ceil(transactions.length / dataPerPage)
   );
 
   const startIndex = (page - 1) * dataPerPage;
-  
+
   const [selectData, setSelectData] = useState(
     transactions.slice(startIndex, startIndex + dataPerPage)
   );
 
   const [filter, setFilter] = useState(selectData);
 
-  console.log(totalPages);
-
   const handleChange = (event, value) => {
     const newStartIndex = (value - 1) * dataPerPage;
-    const newFilter = transactions.slice(newStartIndex, newStartIndex + dataPerPage);
+    const newFilter = transactions.slice(
+      newStartIndex,
+      newStartIndex + dataPerPage
+    );
     setTotalPages(Math.ceil(transactions.length / dataPerPage));
     setPage(value);
     setFilter(newFilter);
   };
 
+  // Example of connection to backend
+  // Note: the transaction schema of our front and back end do not match yet
+
+  // This useEffect runs whenever the page loads!
+  const effectRan = useRef(false);
+  useEffect(() => {
+    const fetchAllExpenses = async () => {
+      try {
+        const response = await axios({
+          method: "get",
+          url: "http://localhost:8080/api/expense",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
   
+        const data = response.data;
+  
+        console.log(data);
+        toast.success('Fetched all expenses from the backend!')
+      } catch (error) {
+        toast.error('Could not fetch from backend')
+      }
+      
+    };
+
+    if (effectRan.current === false) fetchAllExpenses();
+
+    return () => { effectRan.current = true; }
+  }, []);
+
+  const handlePost = async () => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/expense', {
+        expenseName: "Tesco",
+        expenseCategory: "ENTERTAINMENT",
+        expenseAmount: 10
+      });
+
+      console.log(response)
+      toast.success('Data sent to backend!') // Go check your Mongo Compass after this!
+    } catch (error) {
+      toast.error('Could not post to backend')
+    }
+  }
+
   return (
     <div>
       <Stack direction="row" spacing={1} alignItems="center">
@@ -149,43 +130,21 @@ const HomePage: FC = () => {
         <AntSwitch defaultChecked inputProps={{ "aria-label": "ant design" }} />
         <Typography>Asset graphs</Typography>
       </Stack>
-      
+
       <Stack
         direction={{ xs: "column", sm: "row" }}
         justifyContent="center"
         alignItems="center"
         spacing={2}
       >
-        <StackedBarChart /> 
-        <DonutChart /> 
-        {/* <Chart
-          chartType="PieChart"
-          data={chartsData}
-          options={options}
-          width={"100%"}
-          height={"400px"}
-        />
-
-        <Chart
-          chartType="BarChart"
-          width="100%"
-          height="400px"
-          data={stackedBarData}
-          options={stackedBarOptions}
-        />
-
-        <Chart
-          chartType="BarChart"
-          width="100%"
-          height="400px"
-          data={barChartData}
-          options={barChartOptions}
-        /> */}
+        <StackedBarChart />
+        <DonutChart />
       </Stack>
 
       <Stack display="flex" justifyContent="center" alignItems="center">
         <Typography sx={{ fontSize: 24 }}>Balance: £5000</Typography>
         <Button onClick={() => setModalIsOpen(true)}>Add Expenses</Button>
+        <Button onClick={handlePost}>Add/Post a new expense to backend/server</Button>
         <Modal
           open={modalIsOpen}
           onClose={() => setModalIsOpen(false)}
