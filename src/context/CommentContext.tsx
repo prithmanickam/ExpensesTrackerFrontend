@@ -12,6 +12,7 @@ export type Comment = {
   text: string;
   likes: string;
   date: Date;
+  replies: [];
 };
 
 export const CommentContext = createContext<{
@@ -34,11 +35,13 @@ export const CommentContextProvider = ({
       text: "yoooo.",
       likes: "7",
       date: new Date("2023-05-27"),
+      replies: [],
     },
     {
       text: "bruh.",
       likes: "20",
       date: new Date("2023-05-27"),
+      replies: [],
     },
   ]);
 

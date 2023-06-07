@@ -19,10 +19,14 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 const CommentCard: FC<Comment & { idx: number }> = ({
   text,
   likes,
+  replies,
   date,
   idx,
 }) => {
   const [expanded, setExpanded] = useState(false);
+
+  console.log(date);
+  const commentDate = new Date(date);
 
   return (
     <>
@@ -59,7 +63,8 @@ const CommentCard: FC<Comment & { idx: number }> = ({
               color="text.secondary"
               gutterBottom
             >
-              {date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}
+              {commentDate.getDate()}/{commentDate.getMonth() + 1}/
+              {commentDate.getFullYear()}
             </Typography>
           </Stack>
 

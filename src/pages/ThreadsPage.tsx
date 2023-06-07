@@ -13,6 +13,7 @@ const ThreadsPage: FC = () => {
     text: "",
     likes: "0",
     date: new Date(),
+    replies: [],
   });
 
   const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,13 +23,28 @@ const ThreadsPage: FC = () => {
     }));
   };
 
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = async () => {
     addComment(newComment);
     setNewComment({
       text: "",
       likes: "0",
       date: new Date(),
+      replies: [],
     });
+    try {
+      const response = await axios.post("http://localhost:8080/api/post", {
+        poster: "username",
+        text: newComment.text,
+        likes: newComment.likes,
+        replies: ["looks dope!", "jk", "ratio"],
+        date: newComment.date,
+      });
+
+      console.log(response);
+      toast.success("Post sent to backend!");
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
   };
 
   // Fetches all threads
@@ -45,8 +61,19 @@ const ThreadsPage: FC = () => {
         });
 
         const data = response.data;
-
         console.log(data);
+
+        const fetchedComments = data.map((comment: Comment) => ({
+          text: comment.text,
+          likes: comment.likes,
+          date: comment.date,
+          replies: comment.replies,
+        }));
+
+        fetchedComments.forEach((comment) => {
+          addComment(comment);
+        });
+
         toast.success("Fetched all posts");
       } catch (error) {
         toast.error("Could not posts");
@@ -67,6 +94,7 @@ const ThreadsPage: FC = () => {
         text: "yo this is my comment!",
         likes: 15,
         replies: ["looks dope!", "jk", "ratio"],
+        date: new Date(),
       });
 
       console.log(response);
