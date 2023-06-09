@@ -2,10 +2,12 @@ import { FC, useState } from "react";
 import { Comment } from "../context/CommentContext";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   IconButton,
   Stack,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -27,6 +29,8 @@ const CommentCard: FC<Comment & { idx: number }> = ({
   idx,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [editedText, setEditedText] = useState(text);
 
   const commentDate = new Date(date);
 
@@ -45,6 +49,34 @@ const CommentCard: FC<Comment & { idx: number }> = ({
       location.reload();
     }, 500)
   }
+
+  const handleEdit = () => {
+    setEditMode(true);
+  };
+
+  const handleCancelEdit = () => {
+    setEditMode(false);
+    setEditedText(text);
+  };
+
+  const handleSaveEdit = async () => {
+    const myId = {id}.id;
+    try {
+      const response = await axios.put("http://localhost:8080/api/post/" + myId, {
+        text: editedText,
+        date: new Date(),
+      });
+
+    
+      console.log(response);
+      toast.success("Comment updated successfully!");
+      setEditMode(false); // Disable edit mode
+      //setText(editedText); // Update the displayed text
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
+    
+  };
 
   return (
     <>
@@ -86,13 +118,22 @@ const CommentCard: FC<Comment & { idx: number }> = ({
             </Typography>
           </Stack>
 
-          <Typography sx={{ mb: 1.5 }}>{text}</Typography>
+          {editMode ? (
+            <TextField
+              multiline
+              rows={4}
+              value={editedText}
+              onChange={(e) => setEditedText(e.target.value)}
+            />
+          ) : (
+            <Typography sx={{ mb: 1.5 }}>{text}</Typography>
+          )}
 
           <Stack direction="column" justifyContent="space-between" spacing={2}>
             <Stack direction="row" justifyContent="space-between">
               <Tooltip title="Like" placement="top" arrow>
                 <IconButton
-                // onClick: handle deletion request
+                // onClick: handle like request
                 >
                   <ThumbUpIcon
                     color="error"
@@ -105,20 +146,28 @@ const CommentCard: FC<Comment & { idx: number }> = ({
                 </IconButton>
               </Tooltip>
 
-              <Tooltip title="Edit" placement="top" arrow>
-                <IconButton
-                // onClick: handle edit request
-                >
-                  <EditIcon
-                    color="error"
-                    sx={{
-                      ":hover": {
-                        cursor: "pointer",
-                      },
-                    }}
-                  />
-                </IconButton>
-              </Tooltip>
+
+
+              {editMode ? (
+                <>
+                  <Button onClick={handleCancelEdit}>Cancel</Button>
+                  <Button onClick={handleSaveEdit}>Save</Button>
+                </>
+              ) : (
+                <Tooltip title="Edit" placement="top" arrow>
+                  <IconButton onClick={handleEdit}>
+                    <EditIcon
+                      color="error"
+                      sx={{
+                        ":hover": {
+                          cursor: "pointer",
+                        },
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+              )}
+
               <Tooltip title="Delete" placement="top" arrow>
                 <IconButton
                 // onClick: handle deletion request
