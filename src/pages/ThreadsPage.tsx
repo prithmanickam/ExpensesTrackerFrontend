@@ -10,11 +10,14 @@ const ThreadsPage: FC = () => {
   const { comments, addComment } = useContext(CommentContext);
 
   const [newComment, setNewComment] = useState<Comment>({
+    id:"",
     text: "",
     likes: "0",
     date: new Date(),
     replies: [],
   });
+
+  //console.log(comments.length);
 
   const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewComment((prevComment) => ({
@@ -26,6 +29,7 @@ const ThreadsPage: FC = () => {
   const handleCommentSubmit = async () => {
     addComment(newComment);
     setNewComment({
+      id:"",
       text: "",
       likes: "0",
       date: new Date(),
@@ -40,12 +44,15 @@ const ThreadsPage: FC = () => {
         date: newComment.date,
       });
 
-      console.log(response);
       toast.success("Post sent to backend!");
     } catch (error) {
       toast.error((error as Error).message);
     }
+    setTimeout(() => {
+      location.reload();
+    }, 500)
   };
+  
 
   // Fetches all threads
   const effectRan = useRef(false);
@@ -64,6 +71,7 @@ const ThreadsPage: FC = () => {
         console.log(data);
 
         const fetchedComments = data.map((comment: Comment) => ({
+          id: comment.id,
           text: comment.text,
           likes: comment.likes,
           date: comment.date,
@@ -87,22 +95,8 @@ const ThreadsPage: FC = () => {
     };
   }, []);
 
-  const handleCreateNewPost = async () => {
-    try {
-      const response = await axios.post("http://localhost:8080/api/post", {
-        poster: "JAKEJAKEJAKEJAKEJAKEJAKEJAKEJAKEJAKE",
-        text: "yo this is my comment!",
-        likes: 15,
-        replies: ["looks dope!", "jk", "ratio"],
-        date: new Date(),
-      });
+  
 
-      console.log(response);
-      toast.success("Post sent to backend!");
-    } catch (error) {
-      toast.error((error as Error).message);
-    }
-  };
 
   return (
     <Stack
@@ -122,13 +116,10 @@ const ThreadsPage: FC = () => {
       <Button variant="contained" onClick={handleCommentSubmit}>
         Submit
       </Button>
-      <Button variant="contained" onClick={handleCreateNewPost}>
-        Create new post (with fixed data)
-      </Button>
 
       {comments.map(
         (comment, idx) => (
-          console.log(comments.length), (<CommentCard {...comment} idx={idx} />)
+          (<CommentCard {...comment} idx={idx} />)
         )
       )}
     </Stack>

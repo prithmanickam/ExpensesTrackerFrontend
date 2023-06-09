@@ -15,8 +15,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import EditIcon from "@mui/icons-material/Edit";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const CommentCard: FC<Comment & { idx: number }> = ({
+  id,
   text,
   likes,
   replies,
@@ -25,8 +28,23 @@ const CommentCard: FC<Comment & { idx: number }> = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
 
-  console.log(date);
   const commentDate = new Date(date);
+
+  const handleDelete = async () => {
+    const myId = {id}.id;
+
+    console.log("http://localhost:8080/api/post/" + myId)
+    try {
+      const response = await axios.delete("http://localhost:8080/api/post/" + myId);
+      console.log(response);
+      toast.success("Post sent to backend!");
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
+    setTimeout(() => {
+      location.reload();
+    }, 500)
+  }
 
   return (
     <>
@@ -89,7 +107,7 @@ const CommentCard: FC<Comment & { idx: number }> = ({
 
               <Tooltip title="Edit" placement="top" arrow>
                 <IconButton
-                // onClick: handle deletion request
+                // onClick: handle edit request
                 >
                   <EditIcon
                     color="error"
@@ -104,6 +122,7 @@ const CommentCard: FC<Comment & { idx: number }> = ({
               <Tooltip title="Delete" placement="top" arrow>
                 <IconButton
                 // onClick: handle deletion request
+                onClick={handleDelete}
                 >
                   <DeleteIcon
                     color="error"

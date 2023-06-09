@@ -9,6 +9,7 @@ import {
 import toast from "react-hot-toast";
 
 export type Comment = {
+  id: string;
   text: string;
   likes: string;
   date: Date;
@@ -32,14 +33,9 @@ export const CommentContextProvider = ({
   //year-month-day
   const [comments, setComments] = useState<Comment[]>([
     {
+      id:"1",
       text: "yoooo.",
       likes: "7",
-      date: new Date("2023-05-27"),
-      replies: [],
-    },
-    {
-      text: "bruh.",
-      likes: "20",
       date: new Date("2023-05-27"),
       replies: [],
     },
