@@ -87,7 +87,7 @@ const HomePage: FC = () => {
       try {
         const response = await axios({
           method: "get",
-          url: "http://localhost:8080/api/expense",
+          url: "api/expense",
           headers: {
             "Content-Type": "application/json",
           },
@@ -110,7 +110,7 @@ const HomePage: FC = () => {
 
   const handlePost = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/api/expense', {
+      const response = await axios.post('api/expense', {
         expenseName: "Tesco",
         expenseCategory: "ENTERTAINMENT",
         expenseAmount: 10

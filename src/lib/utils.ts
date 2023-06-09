@@ -11,3 +11,5 @@ export const formatDate = (date: Date): string => {
     ].join("-");
   };
   
+// Check if a response number starts with a 2
+export const responseIsOk = (status: number): boolean => (status >= 200 && status < 300) ? true : false;

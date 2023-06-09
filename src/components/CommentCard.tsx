@@ -1,5 +1,5 @@
-import { FC, useState } from "react";
-import { Comment } from "../context/CommentContext";
+import { FC, useContext, useState } from "react";
+import { Thread, ThreadContext } from "../context/ThreadContext";
 import {
   Box,
   Button,
@@ -20,7 +20,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const CommentCard: FC<Comment & { idx: number }> = ({
+const CommentCard: FC<Thread & { idx: number }> = ({
   id,
   text,
   likes,
@@ -31,43 +31,31 @@ const CommentCard: FC<Comment & { idx: number }> = ({
   const [expanded, setExpanded] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editedText, setEditedText] = useState(text);
+  const { removeThread, editThread } = useContext(ThreadContext);
 
   const commentDate = new Date(date);
 
-  const handleDelete = async () => {
-    try {
-      const response = await axios.delete(`http://localhost:8080/api/post/${id}`);
-      console.log(response);
-      toast.success("Post deleted from server!");
-    } catch (error) {
-      toast.error((error as Error).message);
-    }
-    setTimeout(() => {
-      location.reload();
-    }, 500)
-  }
+  const handleDelete = async () => removeThread(id);
 
-  const handleEdit = () => {
-    setEditMode(true);
-  };
+  const handleEdit = () => setEditMode(true);
 
   const handleCancelEdit = () => {
     setEditMode(false);
     setEditedText(text);
   };
 
+  const constructEditedThread = () => ({ 
+    id,
+    text: editedText,
+    likes,
+    date,
+    replies,
+   })
+
   const handleSaveEdit = async () => {
     try {
-      const response = await axios.put(`http://localhost:8080/api/post`, { 
-        id,
-        text: editedText,
-        likes,
-        date,
-        replies,
-       });
+      editThread(constructEditedThread());
 
-      console.log(response);
-      toast.success("Comment updated successfully!");
       setEditMode(false); // Disable edit mode
       //setText(editedText); // Optimistically update the displayed text
     } catch (error) {
@@ -145,7 +133,6 @@ const CommentCard: FC<Comment & { idx: number }> = ({
               </Tooltip>
 
 
-
               {editMode ? (
                 <>
                   <Button onClick={handleCancelEdit}>Cancel</Button>
@@ -182,11 +169,10 @@ const CommentCard: FC<Comment & { idx: number }> = ({
                 </IconButton>
               </Tooltip>
             </Stack>
-            {text.length > 0 ? (
-              <Collapse in={expanded} timeout="auto" unmountOnExit>
-                {text}
-              </Collapse>
-            ) : null}
+            {/* TODO: Fix the collapsible comment section */}
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+                {replies.map((reply) => <div>{reply}</div>)}
+            </Collapse>
           </Stack>
         </CardContent>
       </Card>

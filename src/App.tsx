@@ -8,7 +8,7 @@ import { RequireAuth } from "react-auth-kit";
 import HomePage from "./pages/HomePage";
 import RecommendationPage from "./pages/RecommendationPage";
 import { TransactionContextProvider } from "./context/TransactionContext";
-import { CommentContextProvider } from "./context/CommentContext";
+import { ThreadContextProvider } from "./context/ThreadContext";
 
 function App() {
   return (
@@ -21,9 +21,9 @@ function App() {
         <Route
           path="/threads"
           element={
-            <CommentContextProvider>
+            <ThreadContextProvider>
               <ThreadsPage />
-            </CommentContextProvider>
+            </ThreadContextProvider>
           }
         />
         <Route path="/*" element={<LandingPage />} />
