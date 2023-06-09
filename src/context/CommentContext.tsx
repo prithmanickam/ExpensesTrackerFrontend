@@ -32,13 +32,6 @@ export const CommentContextProvider = ({
   // We'd pull this from our backend
   //year-month-day
   const [comments, setComments] = useState<Comment[]>([
-    {
-      id:"1",
-      text: "yoooo.",
-      likes: "7",
-      date: new Date("2023-05-27"),
-      replies: [],
-    },
   ]);
 
   const addComment = (newComment: Comment): void => {

@@ -35,13 +35,10 @@ const CommentCard: FC<Comment & { idx: number }> = ({
   const commentDate = new Date(date);
 
   const handleDelete = async () => {
-    const myId = {id}.id;
-
-    console.log("http://localhost:8080/api/post/" + myId)
     try {
-      const response = await axios.delete("http://localhost:8080/api/post/" + myId);
+      const response = await axios.delete(`http://localhost:8080/api/post/${id}`);
       console.log(response);
-      toast.success("Post sent to backend!");
+      toast.success("Post deleted from server!");
     } catch (error) {
       toast.error((error as Error).message);
     }
@@ -60,18 +57,19 @@ const CommentCard: FC<Comment & { idx: number }> = ({
   };
 
   const handleSaveEdit = async () => {
-    const myId = {id}.id;
     try {
-      const response = await axios.put("http://localhost:8080/api/post/" + myId, {
+      const response = await axios.put(`http://localhost:8080/api/post`, { 
+        id,
         text: editedText,
-        date: new Date(),
-      });
+        likes,
+        date,
+        replies,
+       });
 
-    
       console.log(response);
       toast.success("Comment updated successfully!");
       setEditMode(false); // Disable edit mode
-      //setText(editedText); // Update the displayed text
+      //setText(editedText); // Optimistically update the displayed text
     } catch (error) {
       toast.error((error as Error).message);
     }
