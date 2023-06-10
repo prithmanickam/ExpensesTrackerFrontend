@@ -11,7 +11,8 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.0",
+    "@emotion/core": "^11.0.0",
+    "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/joy": "^5.0.0-alpha.81",
@@ -21,6 +22,7 @@
     "axios": "^1.4.0",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
+    "nanoid": "^4.0.2",
     "react": "^18.2.0",
     "react-auth-kit": "^2.12.2",
     "react-dom": "^18.2.0",

@@ -28,7 +28,7 @@ const LoginPage: FC = () => {
 
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8080/api/auth',
+        url: 'api/auth',
         headers: {
           "Content-Type": "application/json",
         },

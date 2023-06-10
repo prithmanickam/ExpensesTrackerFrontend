@@ -4,7 +4,7 @@ name: Deploy static content to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ['main']
+    branches: ['main', 'ci-pipeline']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,7 +21,46 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Single deploy job since we're just deploying
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Pull from repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up node version
+        uses: actions/setup-node@v2
+        with:
+          cache: 'npm'
+          node-version: '14'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build project 
+        run: npm run build
+      - name: Copy build directory
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist
+
+  test:
+    needs: [build]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Pull from repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up node version
+        uses: actions/setup-node@v2
+        with:
+          cache: 'npm'
+          node-version: '14'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+        
   deploy:
     environment:
       name: github-pages
@@ -49,3 +88,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+        
+        

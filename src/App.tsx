@@ -8,6 +8,7 @@ import { RequireAuth } from "react-auth-kit";
 import HomePage from "./pages/HomePage";
 import RecommendationPage from "./pages/RecommendationPage";
 import { TransactionContextProvider } from "./context/TransactionContext";
+import { ThreadContextProvider } from "./context/ThreadContext";
 
 function App() {
   return (
@@ -17,7 +18,14 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/threads" element={<ThreadsPage />} />
+        <Route
+          path="/threads"
+          element={
+            <ThreadContextProvider>
+              <ThreadsPage />
+            </ThreadContextProvider>
+          }
+        />
         <Route path="/*" element={<LandingPage />} />
 
         {/* Private routes */}
@@ -30,6 +38,7 @@ function App() {
               <HomePage />
               {/* <ChartsData /> */}
             </TransactionContextProvider>
+
             //</RequireAuth>
           }
         />
