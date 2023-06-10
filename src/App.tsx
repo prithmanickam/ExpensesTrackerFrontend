@@ -9,6 +9,7 @@ import HomePage from "./pages/HomePage";
 import RecommendationPage from "./pages/RecommendationPage";
 import { TransactionContextProvider } from "./context/TransactionContext";
 import { ThreadContextProvider } from "./context/ThreadContext";
+import SignUpPage from "./pages/SignUpPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
         <Route
           path="/threads"
           element={
