@@ -12,47 +12,73 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { Container } from "@mui/material";
-import { FC, FormEvent } from "react";
+import { FC, FormEvent, useState } from "react";
 import { useSignIn } from "react-auth-kit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 
 const LoginPage: FC = () => {
   const signIn = useSignIn();
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const { mutate: handleSubmit } = useMutation({
     mutationFn: async (event: FormEvent<HTMLFormElement>) => {
+      try {
+        const email = event.currentTarget.email.value;
+        const password = event.currentTarget.password.value;
+
+        const response = await axios.post("http://localhost:5173/api/login", {
+          email,
+          password,
+        });
+
+        signIn({
+          token: response.data.token,
+          expiresIn: 3600,
+          tokenType: "Bearer",
+          authState: { email: email },
+        });
+      } catch (err) {
+        if (err && err instanceof AxiosError)
+          setError(err.response?.data.message);
+        else if (err && err instanceof Error) setError(err.message);
+
+        console.log("Error: ", err);
+      }
+
       event.preventDefault();
 
       const response = await axios({
-        method: 'get',
-        url: 'api/auth',
+        method: "get",
+        url: "api/auth",
         headers: {
           "Content-Type": "application/json",
         },
-      })
+      });
 
       return response.data;
     },
 
     onSuccess: async (body) => {
-      if (signIn({
-        token: body.data,
-        tokenType: "Bearer",
-        expiresIn: 5,
-        // authState: { 
-        //   // Locally store non-sensitive user data here
-        //  }
-      })) {
-        navigate("/expense")
+      if (
+        signIn({
+          token: body.data,
+          tokenType: "Bearer",
+          expiresIn: 5,
+          // authState: {
+          //   // Locally store non-sensitive user data here
+          //  }
+        })
+      ) {
+        navigate("/home");
       }
     },
   });
 
   return (
-    <Container maxWidth="xl" disableGutters >
+    <Container maxWidth="xl" disableGutters>
       <Grid
         container
         component="main"
@@ -150,6 +176,6 @@ const LoginPage: FC = () => {
       </Grid>
     </Container>
   );
-}
+};
 
 export default LoginPage;

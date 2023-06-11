@@ -47,8 +47,17 @@ export default function SignUp() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" 
+      sx={{
+        backgroundImage: "url(https://source.unsplash.com/random?wallpapers)",
+        backgroundSize: "cover",
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
         <CssBaseline />
+        
 
         <Card
           variant="outlined"
@@ -61,9 +70,11 @@ export default function SignUp() {
             boxShadow: 3,
             borderWidth: 2,
             borderColor: "navy",
+            
           }}
         >
           <Box
+          
             sx={{
               marginTop: 5,
               marginBottom: 5,
@@ -154,7 +165,9 @@ export default function SignUp() {
             </Box>
           </Box>
         </Card>
+        
       </Container>
+      
     </ThemeProvider>
   );
 }
