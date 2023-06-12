@@ -1,5 +1,5 @@
 "use client"
-// TODO: Move non-interactable components into children components
+// TODO: Split non-interactable components into children components
 
 import {
   Box,
