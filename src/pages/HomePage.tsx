@@ -1,23 +1,15 @@
 import {
   Box,
   Button,
-  Card,
-  CardActions,
-  CardContent,
-  Divider,
   FormControl,
-  Grid,
   InputLabel,
   MenuItem,
   Modal,
   Pagination,
   Select,
-  SelectChangeEvent,
   Stack,
-  Switch,
   TextField,
   Typography,
-  styled,
 } from "@mui/material";
 import { FC, useContext, useEffect, useRef, useState } from "react";
 import {
