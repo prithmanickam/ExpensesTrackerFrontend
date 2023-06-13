@@ -1,4 +1,5 @@
 "use client";
+import { ThreadContextProvider } from "@/context/ThreadContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode } from "react";
 
@@ -8,13 +9,13 @@ interface Props {
 
 const queryClient = new QueryClient();
 
-const QueryWrapper = ({ children }: Props) => {
+const GlobalContextWrapper = ({ children }: Props) => {
   return (
     <QueryClientProvider client={queryClient}>
-        <>
-        {children}
-        </>
-        </QueryClientProvider>
+      <ThreadContextProvider>
+        <>{children}</>
+      </ThreadContextProvider>
+    </QueryClientProvider>
   );
 };
-export default QueryWrapper;
+export default GlobalContextWrapper;

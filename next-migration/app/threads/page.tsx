@@ -17,13 +17,15 @@ import {
   ThreadContextProvider,
 } from "@/context/ThreadContext";
 import { nanoid } from "nanoid";
+import { Post } from "@/lib/validator/post";
 
 export default function Threads() {
   const { threads, addThread, fetchAllThreads } = useContext(ThreadContext);
 
   // New thread input state
-  const [newThread, setNewThread] = useState<Thread>({
+  const [newThread, setNewThread] = useState<Post>({
     id: "",
+    poster: "",
     text: "",
     likes: "0",
     date: new Date(),
@@ -37,7 +39,7 @@ export default function Threads() {
     }));
   };
 
-  const constructNewThread = () => ({
+  const constructNewThread = (): Post => ({
     poster: "change_when_theres_auth",
     text: newThread.text,
     likes: newThread.likes,
@@ -51,13 +53,9 @@ export default function Threads() {
   // Fetch all threads on page load
   const effectRan = useRef(false);
   useEffect(() => {
-    if (effectRan.current === false) {
-      fetchAllThreads();
-    }
+    if (effectRan.current === false) fetchAllThreads();
 
-    return () => {
-      effectRan.current = true;
-    };
+    return () => { effectRan.current = true; };
   }, [fetchAllThreads]);
 
   return (
@@ -67,7 +65,6 @@ export default function Threads() {
       justifyContent="center"
       alignItems="center"
     >
-      <ThreadContextProvider>
         <TextField
           id="outlined-multiline-static"
           label="Enter Comment"
@@ -83,7 +80,6 @@ export default function Threads() {
         {threads.map((thread, idx) => (
           <CommentCard {...thread} idx={idx} />
         ))}
-      </ThreadContextProvider>
     </Stack>
   );
 }

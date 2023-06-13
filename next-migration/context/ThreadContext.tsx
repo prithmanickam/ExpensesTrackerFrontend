@@ -52,7 +52,7 @@ export const ThreadContextProvider = ({
       setThreads((prev) => [...prev, newThread]);
       
       // Post to server
-      const response = await axios.post("api/post", newThread);
+      const response = await axios.post("api/db", newThread);
 
       // TODO: If successful, clear the input field
       if (responseIsOk(response.status)) { 
@@ -93,7 +93,7 @@ export const ThreadContextProvider = ({
     try {
       const response = await axios({
         method: "get",
-        url: "api/post",
+        url: "api/db",
         headers: {
           "Content-Type": "application/json",
         },
@@ -101,13 +101,16 @@ export const ThreadContextProvider = ({
 
       const data = response.data;
 
-      setThreads(data.map((comment: Thread) => ({
-        id: comment.id,
-        text: comment.text,
-        likes: comment.likes,
-        date: comment.date,
-        replies: comment.replies,
-      })))
+      
+      if (data.length > 0) {
+        setThreads(data.map((comment: Thread) => ({
+          id: comment.id,
+          text: comment.text,
+          likes: comment.likes,
+          date: comment.date,
+          replies: comment.replies,
+        })))
+      }
 
       if (responseIsOk(response.status)) { 
         return toast.success("Fetched threads");

@@ -2,7 +2,7 @@ import Navbar from "@/components/ui/Navbar";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import QueryWrapper from "@/components/providers/QueryProvider";
+import GlobalContextWrapper from "@/components/providers/GlobalProvider";
 import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,11 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <QueryWrapper>
+        <GlobalContextWrapper>
           <Toaster position="top-center" />
           <Navbar />
           {children}
-        </QueryWrapper>
+        </GlobalContextWrapper>
       </body>
     </html>
   );
