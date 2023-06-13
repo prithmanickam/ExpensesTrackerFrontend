@@ -15,11 +15,8 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Collapse from "@mui/material/Collapse";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import EditIcon from "@mui/icons-material/Edit";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import axios from "axios";
 import toast from "react-hot-toast";
 
 const CommentCard: FC<Thread & { idx: number }> = ({
@@ -29,6 +26,7 @@ const CommentCard: FC<Thread & { idx: number }> = ({
   replies,
   date,
   idx,
+  poster
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -52,6 +50,7 @@ const CommentCard: FC<Thread & { idx: number }> = ({
     likes,
     date,
     replies,
+    poster
    })
 
   const handleSaveEdit = async () => {
@@ -121,7 +120,7 @@ const CommentCard: FC<Thread & { idx: number }> = ({
             <Stack direction="row" justifyContent="space-between">
               <Tooltip title="Like" placement="top" arrow>
                 <IconButton
-                // onClick: handle like request
+                // TODO: onClick: handle like request
                 >
                   <ThumbUpIcon
                     color="error"

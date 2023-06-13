@@ -4,7 +4,7 @@ export const PostSchema = z.object({
     id: z.string(),
     text: z.string(),
     likes: z.string(),
-    date: z.date(),
+    date: z.string(),
     poster: z.string(),
     replies: z.array(z.string())
 })

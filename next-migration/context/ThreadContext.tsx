@@ -5,10 +5,13 @@ import {
   ReactNode,
   SetStateAction,
   createContext,
+  useEffect,
   useState,
 } from "react";
 import toast from "react-hot-toast";
 import { responseIsOk } from "../lib/utils";
+import { flushSync } from "react-dom";
+import { setInterval } from "timers/promises";
 
 export type Thread = {
   id: string;
@@ -16,20 +19,21 @@ export type Thread = {
   likes: string;
   date: Date;
   replies: string[];
+  poster: string;
 };
 
 export const ThreadContext = createContext<{
   threads: Thread[];
   addThread: (inputText: Thread) => void;
   removeThread: (id: string) => void;
-  fetchAllThreads: () => void,
-  editThread: (editedThread: Thread) => void
+  fetchAllThreads: () => void;
+  editThread: (editedThread: Thread) => void;
 }>({
   threads: [],
   addThread: () => {},
   removeThread: () => {},
   fetchAllThreads: () => {},
-  editThread: () => {}
+  editThread: () => {},
 });
 
 export const ThreadContextProvider = ({
@@ -37,8 +41,7 @@ export const ThreadContextProvider = ({
 }: {
   children: ReactNode;
 }): JSX.Element => {
-  const [threads, setThreads] = useState<Thread[]>([
-  ]);
+  const [threads, setThreads] = useState<Thread[]>([]);
 
   const addThread = async (newThread: Thread) => {
     // Check if text input's  empty
@@ -50,22 +53,21 @@ export const ThreadContextProvider = ({
     try {
       // Optimisitcally add a thread
       setThreads((prev) => [...prev, newThread]);
-      
+
       // Post to server
       const response = await axios.post("api/db", newThread);
 
       // TODO: If successful, clear the input field
-      if (responseIsOk(response.status)) { 
-        return toast.success("Thread added!")
+      if (responseIsOk(response.status)) {
+        return toast.success("Thread added!");
       }
-      
+
       throw new Error();
     } catch (error) {
       // If request unsucessful, remove the optimiscally updated thread
       toast.error((error as Error).message);
-      setThreads((prev) => (prev.filter((thread) => thread.id !== newThread.id)))
+      setThreads((prev) => prev.filter((thread) => thread.id !== newThread.id));
     }
-
   };
 
   const removeThread = async (id: string) => {
@@ -73,21 +75,21 @@ export const ThreadContextProvider = ({
 
     try {
       const response = await axios.delete(`api/post/${id}`);
-      
+
       // Optimistically remove thread
-      setThreads((prev) => (prev.filter((thread) => thread.id !== id)))
+      setThreads((prev) => prev.filter((thread) => thread.id !== id));
 
       if (responseIsOk(response.status)) {
-        return toast.success("Comment deleted!")
+        return toast.success("Comment deleted!");
       }
 
-      throw new Error()
+      throw new Error();
     } catch (error) {
       // TODO: Add the comment back into place if request failed
       toast.error("Could not remove thread");
-      setThreads((prev) => (prev.concat(soonToBeRemovedThread)))
+      setThreads((prev) => prev.concat(soonToBeRemovedThread));
     }
-  }
+  };
 
   const fetchAllThreads = async () => {
     try {
@@ -99,24 +101,25 @@ export const ThreadContextProvider = ({
         },
       });
 
-      const data = response.data;
+      const data = response.data.data;
 
-      
-      if (data.length > 0) {
-        setThreads(data.map((comment: Thread) => ({
-          id: comment.id,
-          text: comment.text,
-          likes: comment.likes,
-          date: comment.date,
-          replies: comment.replies,
-        })))
-      }
+      setThreads(
+        data.map((comment: Thread) => {
+          return {
+            id: comment.id,
+            text: comment.text,
+            likes: comment.likes,
+            date: comment.date,
+            replies: comment.replies,
+          };
+        })
+      );
 
-      if (responseIsOk(response.status)) { 
+      if (responseIsOk(response.status)) {
         return toast.success("Fetched threads");
       }
 
-      throw new Error()
+      throw new Error();
     } catch (error) {
       toast.error("Could not fetch posts");
     }
@@ -133,9 +136,9 @@ export const ThreadContextProvider = ({
       setThreads((prev) => prev.map((thread) => thread.id === editedThread.id ? editedThread : thread));
 
       if (responseIsOk(response.status)) {
-        return toast.success("Thread edited!")
+        return toast.success("Thread edited!");
       }
-      
+
       throw new Error("Failed to edit thread");
     } catch (error) {
       // Revert the optimistically updated thread
@@ -148,7 +151,7 @@ export const ThreadContextProvider = ({
         ));
       }
     }
-  }
+  };
 
   return (
     <ThreadContext.Provider
@@ -157,7 +160,7 @@ export const ThreadContextProvider = ({
         addThread,
         removeThread,
         fetchAllThreads,
-        editThread
+        editThread,
       }}
     >
       {children}

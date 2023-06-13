@@ -14,16 +14,14 @@ import CommentCard from "@/components/custom/CommentCard";
 import {
   Thread,
   ThreadContext,
-  ThreadContextProvider,
 } from "@/context/ThreadContext";
 import { nanoid } from "nanoid";
-import { Post } from "@/lib/validator/post";
 
 export default function Threads() {
   const { threads, addThread, fetchAllThreads } = useContext(ThreadContext);
 
   // New thread input state
-  const [newThread, setNewThread] = useState<Post>({
+  const [newThread, setNewThread] = useState<Thread>({
     id: "",
     poster: "",
     text: "",
@@ -39,7 +37,7 @@ export default function Threads() {
     }));
   };
 
-  const constructNewThread = (): Post => ({
+  const constructNewThread = () => ({
     poster: "change_when_theres_auth",
     text: newThread.text,
     likes: newThread.likes,
